@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
-
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -16,16 +15,14 @@ import {
   useScaffoldWriteContract,
 } from "~~/hooks/scaffold-eth";
 
+// query format
 export const GET_MESSAGES = gql`
-  query MyQuery {
-    messages(first: 10, orderDirection: desc, orderBy: createdAt) {
+  {
+    sendMessages(first: 5) {
+      id
+      _from
+      _to
       message
-      _to {
-        id
-      }
-      _from {
-        id
-      }
     }
   }
 `;
@@ -64,12 +61,12 @@ const Home: NextPage = () => {
 
   const { loading, error, data: messagesData } = useQuery(GET_MESSAGES);
 
-  const messages = messagesData?.messages || [];
+  const messages = messagesData?.sendMessages || [];
 
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
-      <div className="p-5 font-black text-xl">{greeting}</div>
+        <div className="p-5 font-black text-xl">{greeting}</div>
         <div>
           <Address address={address} />
           <Balance address={address} />
@@ -85,7 +82,7 @@ const Home: NextPage = () => {
             value={newGreeting}
             placeholder="Type here"
             className="input"
-            onChange={(e) => setNewGreeting(e.target.value)}
+            onChange={e => setNewGreeting(e.target.value)}
           />
         </div>
         <div className="p-5">
@@ -95,19 +92,14 @@ const Home: NextPage = () => {
         </div>
         {/* add the message receipient and message field with a button. */}
         <div className="p-5">
-        <AddressInput
-            value={newReceiver}
-            placeholder="Recepient?"
-            name={address}
-            onChange={setNewReceiver}
-          />
+          <AddressInput value={newReceiver} placeholder="Recepient?" name={address} onChange={setNewReceiver} />
         </div>
         <div className="p-5">
           <input
             value={newMessage}
             placeholder="Message"
             className="input"
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={e => setNewMessage(e.target.value)}
           />
         </div>
         <div className="p-5">
@@ -125,7 +117,7 @@ const Home: NextPage = () => {
             </tr>
           </thead>
           <tbody>
-            {messages.map((message) => (
+            {messages.map(message => (
               <tr key={message.id}>
                 <td>{message._from.id}</td>
                 <td>{message._to.id}</td>
