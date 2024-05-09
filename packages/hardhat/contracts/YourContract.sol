@@ -12,6 +12,7 @@ import "hardhat/console.sol";
  * It also allows the owner to withdraw the Ether in the contract
  * @author BuidlGuidl
  */
+
 contract YourContract {
 	// State Variables
 	address public immutable owner;
@@ -28,6 +29,8 @@ contract YourContract {
 		uint256 value
 	);
 
+	event SendMessage(address _from, address _to, string message);
+
 	// Constructor: Called once on contract deployment
 	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
 	constructor(address _owner) {
@@ -41,6 +44,16 @@ contract YourContract {
 		require(msg.sender == owner, "Not the Owner");
 		_;
 	}
+
+	/**
+	 * 
+	 * @param _to - destination address
+	 * @param message - message
+	 */
+	 function sendMessage(address _to, string calldata message) external {
+        emit SendMessage(msg.sender, _to, message);
+    }
+
 
 	/**
 	 * Function that allows anyone to change the state variable "greeting" of the contract and increase the counters

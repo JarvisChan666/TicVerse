@@ -1,0 +1,11 @@
+# dependencies
+node_modules
+
+# generated
+generated
+
+# graph-node
+graph-node/bin
+graph-node/data
+
+
